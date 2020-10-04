@@ -1,0 +1,146 @@
+*{
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    color: rgb(255, 62, 191);
+    font-family: 'Lobster', cursive;
+    
+}
+
+h1{
+    margin: 0;
+    
+}
+
+img{
+    width: 100%;
+    height: auto;
+}
+
+.info p{
+    margin:0;
+    padding: 0; 
+    font-size: 24px;
+}
+
+#time{
+    float: left;
+}
+#score{
+    text-align: right;
+}
+
+#game-container{
+    margin: 5px 0 0 50px;
+    text-align: center;
+    width: fit-content;
+    
+}
+
+#myCanvas{
+ 
+    position: absolute;
+    top: 75px;
+    left: 50px;
+    z-index: 0;
+}
+
+#game-board{
+    z-index: 10;
+    position: relative;
+    width: fit-content;
+    display: grid;
+    grid-template-columns:  30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px ;
+ 
+}
+
+.cell{
+    background-color: none;
+    padding: 5px;
+    border: 2px solid rgb(242, 142, 255);
+}
+
+.cell:hover{
+    cursor: pointer;
+    border: 2px solid red;
+  
+}
+
+.onSelect{
+    background-color: rgb(92, 231, 250);
+    border: 2px solid red;
+}
+
+#game-over, #win-game{
+    border: 2px solid red;
+    width: 630px;
+    height: 540px;
+    background-color: rgba(255, 255, 255, 0.842);
+    top: 75px;
+    left: 50px;
+    font-size: 80px;
+    z-index: 50;
+    
+    position: absolute;
+}
+
+#game-over p , #win-game p{
+   
+    margin: 0;
+    margin-top: 100px;
+    position: relative;
+   
+}
+
+#game-over button, #win-game button{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    letter-spacing: 1px;
+    font-size: 40px;
+    outline: 0;
+    background-color: rgb(252, 99, 226);
+    color: white;
+    border-radius: 20px;
+    border: 2px solid rgb(235, 18, 18);
+}
+
+#game-over button:hover, #win-game button:hover{
+    cursor: pointer;
+    background-color: rgb(253, 0, 198);
+}
+
+#reload{
+    border: 2px solid red;
+    width: 630px;
+    height: 540px;
+    background-color: rgba(255, 255, 255, 0.842);
+    top: 75px;
+    left: 50px;
+    font-size: 40px;
+    z-index: 50;
+    position: absolute;
+}
+#reload p{
+    margin: 0;
+    margin-top: 100px;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+#reloader{
+    width: 150px;
+    height: 150px;
+    margin: 30px auto;
+   
+    border-top: 10px solid red;
+    border-bottom: 10px solid rgb(228, 22, 176);
+    border-left: 10px solid cyan;
+    border-right: 10px solid rgb(62, 62, 252);
+    border-radius: 50%;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}

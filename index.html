@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pikachu by Dang Khoa</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <div id="game-container">
+            <h1>Pikachu Game by Dang Khoa</h1>
+            <div class="info">
+                <p id="time">Time: 200</p>
+                <p id="score">Score: 500</p>
+            </div>
+            <div id="game-board"></div>
+            <div id="game-over">
+                <p>Game Over</p>
+                <button id="re-btn" onclick="init()">Restart</button>
+            </div>
+            <div id="win-game">
+                <p>Victory</p>
+                <button id="re-btn" onclick="init()">Restart</button>
+            </div>
+            <div id="reload">
+                <p>No more possible selections <br> Shuffling</p>
+                
+                <div id="reloader">
+                </div>
+            </div>
+            
+            <canvas id="myCanvas" width="630" height="540"></canvas>
+        </div>
+      
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
