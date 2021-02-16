@@ -8,9 +8,7 @@ body{
     padding: 0;
     color: rgb(255, 62, 191);
     font-family: 'Lobster', cursive;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+   
 }
 
 h1{
