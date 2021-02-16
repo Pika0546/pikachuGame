@@ -8,7 +8,9 @@ body{
     padding: 0;
     color: rgb(255, 62, 191);
     font-family: 'Lobster', cursive;
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 h1{
@@ -21,9 +23,14 @@ img{
     height: auto;
 }
 
+.info{
+    padding: 0 45px;
+    
+}
+
 .info p{
     margin:0;
-    padding: 0; 
+    padding: 0;
     font-size: 24px;
 }
 
@@ -35,30 +42,34 @@ img{
 }
 
 #game-container{
-    margin: 5px 0 0 50px;
+    position: relative;
     text-align: center;
     width: fit-content;
     
 }
 
 #myCanvas{
- 
     position: absolute;
-    top: 75px;
-    left: 50px;
-    z-index: 0;
+    top: 0;
+    left: 0;
+    z-index:-1;
+    /* width: 100%; */
+    /* background-color: grey; */
+    /* height: 100%; */
 }
 
 #game-board{
-    z-index: 10;
+    
     position: relative;
     width: fit-content;
     display: grid;
-    grid-template-columns:  30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px ;
- 
+    
 }
 
+
+
 .cell{
+    z-index: 1;
     background-color: none;
     padding: 5px;
     border: 2px solid rgb(242, 142, 255);
@@ -77,11 +88,11 @@ img{
 
 #game-over, #win-game{
     border: 2px solid red;
-    width: 630px;
-    height: 540px;
+    width: 100%;
+    height: 100%;
     background-color: rgba(255, 255, 255, 0.842);
-    top: 75px;
-    left: 50px;
+    top: 0;
+    left: 0;
     font-size: 80px;
     z-index: 50;
     
@@ -114,11 +125,11 @@ img{
 
 #reload{
     border: 2px solid red;
-    width: 630px;
-    height: 540px;
+    width: 100%;
+    height: 100%;
     background-color: rgba(255, 255, 255, 0.842);
-    top: 75px;
-    left: 50px;
+    top: 0;
+    left: 0;
     font-size: 40px;
     z-index: 50;
     position: absolute;
@@ -131,6 +142,8 @@ img{
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+
 #reloader{
     width: 150px;
     height: 150px;

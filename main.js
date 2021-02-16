@@ -1,28 +1,33 @@
-const cellW = 30;
-const cellH = 30;
-const ColCell = 12;
-const BoardWidth = 14;
-const BoardHeight = 12;
-const RowCell = 10;
-const CellSize = 45;
-const TypeNum = 20;
-const NumEachType = 6;
-const cellNum = ColCell * RowCell;
+let BoardWidth = 14;
+let BoardHeight = 12;
+let ColCell = BoardWidth -  2;
+let RowCell = BoardHeight - 2;
+let CellSize = 45;
+let cellNum = ColCell * RowCell;
+let TypeNum = 20;
+let NumEachType = 6;
 const gameTime = 300;
 
-var board = document.getElementById("game-board");
-var myCanvas = document.getElementById("myCanvas");
-var ctx = myCanvas.getContext("2d");
-var checkTypeNum = [];
-var cells = [];
-var gameScore = 0;
-var isSelecting = 0;
-var timeLeft = 10;
-var isWin = false;
+let board = document.getElementById("game-board");
+let myCanvas = "";
+let ctx = '';
+let checkTypeNum = [];
+let cells = [];
+let gameScore = 0;
+let isSelecting = 0;
+let timeLeft = 10;
+let isWin = false;
 
-for(var i = 0 ; i <= TypeNum; i ++){
+window.addEventListener("dblclick", (event)=>{
+    event.preventDefault();
+})
+
+for(let i = 0 ; i <= TypeNum; i ++){
     checkTypeNum.push(0);
 }
+
+
+
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -36,18 +41,19 @@ function max(a, b) {
     return (a > b)? a : b;
 }
 
-function drawLineFromXtoY(x1,y1, x2,y2){
-    console.log("vẽ");
+function drawLineFromXtoY(x1,y1, x2,y2, ctx){
+  
     ctx.lineWidth = 5;
     ctx.strokeStyle = "red";
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
+    
 }
 
 function createRanDomValueForCell() {
-    var t = Math.floor(Math.random()*TypeNum) + 1;
+    let t = Math.floor(Math.random()*TypeNum) + 1;
     while(checkTypeNum[t] >= NumEachType){
         t = Math.floor(Math.random()*TypeNum) + 1;
     }
@@ -73,7 +79,7 @@ function cell(t_id, t_value, t_x, t_y){
             this.image.innerHTML =  '<img src="image/pic' + this.value +  '.png" alt="">';
         else{
             if(this.id > BoardWidth && this.id <= BoardWidth*BoardHeight - BoardWidth && this.id%BoardWidth != 0 && (this.id + 1)%BoardWidth != 0){
-                this.image.style.border = "2px solid rgb(242, 142, 255)";
+                this.image.style.border = "1px solid rgb(242, 142, 255)";
             }
             else
                 this.image.style.border = "none";
@@ -87,13 +93,13 @@ function cell(t_id, t_value, t_x, t_y){
 
 
 function swapCell() {
-    for(var i = 0 ; i < cells.length; i ++){
+    for(let i = 0 ; i < cells.length; i ++){
         if(cells[i].value !==0){
-            var t_index = getRndInteger(0,cells.length - 1);
+            let t_index = getRndInteger(0,cells.length - 1);
             while(cells[t_index].value == 0){
                 t_index = getRndInteger(0,cells.length - 1);
             }
-            var t = cells[i].value;
+            let t = cells[i].value;
             cells[i].value = cells[t_index].value;
             cells[t_index].value = t;
         }
@@ -113,7 +119,7 @@ function handleClick(e) {
 }
 
 function addEventForCell() {
-    for(var id = BoardWidth; id < BoardWidth*BoardHeight - BoardWidth; id ++){
+    for(let id = BoardWidth; id < BoardWidth*BoardHeight - BoardWidth; id ++){
         if(id%BoardWidth == 0 || (id + 1)%BoardWidth == 0 || cells[id].value == 0){
             if(cells[id].value == 0){
                 cells[id].image.removeEventListener("click",handleClick);
@@ -131,27 +137,29 @@ function init() {
     gameScore = 0;
     isSelecting = 0;
     timeLeft = gameTime;
-    board.innerHTML = "";
+    board.innerHTML = " <canvas id='myCanvas' width='630' height='540'></canvas>";
     isWin = false;
-    for(var i = 0 ; i <= TypeNum; i ++){
+    myCanvas = document.getElementById("myCanvas");
+    ctx = myCanvas.getContext("2d");
+    for(let i = 0 ; i <= TypeNum; i ++){
         checkTypeNum[i] = 0;
     }
     cells.splice(0,cells.length);
-    var temp = "";
-    for(var i = 0 ; i < BoardWidth; i ++){
+    let temp = "";
+    for(let i = 0 ; i < BoardWidth; i ++){
         temp += CellSize + "px ";
     }
     board.style.gridTemplateColumns = temp;
     temp = "";
-    for(var i = 0; i < BoardHeight; i++){
+    for(let i = 0; i < BoardHeight; i++){
         temp += CellSize + "px ";
     }
     board.style.gridTemplateRows = temp;
 
-    for(var i = 0 ; i < BoardHeight; i ++){
-        for(var j = 0; j < BoardWidth; j++){
-            var t_id = j + i*BoardWidth;
-            var t_value = 0;
+    for(let i = 0 ; i < BoardHeight; i ++){
+        for(let j = 0; j < BoardWidth; j++){
+            let t_id = j + i*BoardWidth;
+            let t_value = 0;
             if(i == 0 || i == BoardHeight - 1 || j == 0 || j == BoardWidth - 1 ){
                 t_value = 0;
             }else{
@@ -164,18 +172,19 @@ function init() {
     document.getElementById("win-game").style.display = "none";
     document.getElementById("reload").style.display = "none";
     addEventForCell();
-    game();
+    // game();
 }
 
+
 function drawCells() {
-    
-    
     setTimeout(function() {
-        for(var i = 0 ; i < cells.length ; i ++){
+        ctx.canvas.width = board.clientWidth;
+        ctx.canvas.height = board.clientHeight;
+        for(let i = 0 ; i < cells.length ; i ++){
             cells[i].draw();
-    
+           
         }
-        myCanvas.style.zIndex = 0;
+        myCanvas.style.zIndex = -1;
       
     }, 300);
     
@@ -213,12 +222,11 @@ function checkValue(id1, id2) {
 
 }
 
-
 function checkOneHorizontalLine(id1, id2, drawable) {
-    var x1 = id1%BoardWidth;
-    var x2 = id2%BoardWidth;
-    var y1 = Math.floor(id1/BoardWidth);
-    var y2 = Math.floor(id2/BoardWidth);
+    let x1 = id1%BoardWidth;
+    let x2 = id2%BoardWidth;
+    let y1 = Math.floor(id1/BoardWidth);
+    let y2 = Math.floor(id2/BoardWidth);
    
     if(x1 >  x2){
         let t = x1;
@@ -227,15 +235,15 @@ function checkOneHorizontalLine(id1, id2, drawable) {
    }
     if(y1 == y2){
         
-        for(var i = x1 + 1; i < x2; i++){
+        for(let i = x1 + 1; i < x2; i++){
             if(cells[i + y1*BoardWidth].value != 0){
                 return false;
             }
         }
         if(drawable){
-            drawLineFromXtoY(cells[id1].centerX,cells[id1].centerY, cells[id2].centerX,cells[id2].centerY);
-                setTimeout(() => {
-                    ctx.clearRect(0, 0, 630, 540);
+            drawLineFromXtoY(cells[id1].centerX,cells[id1].centerY, cells[id2].centerX,cells[id2].centerY, ctx);
+            setTimeout(() => {
+                ctx.clearRect(0, 0, 630, 540);
             }, 300);
         }
         return true;
@@ -245,10 +253,10 @@ function checkOneHorizontalLine(id1, id2, drawable) {
 }
 
 function checkOneVerticalLine(id1, id2, drawable) {
-    var x1 = id1%BoardWidth;
-    var x2 = id2%BoardWidth;
-    var y1 = Math.floor(id1/BoardWidth);
-    var y2 = Math.floor(id2/BoardWidth);
+    let x1 = id1%BoardWidth;
+    let x2 = id2%BoardWidth;
+    let y1 = Math.floor(id1/BoardWidth);
+    let y2 = Math.floor(id2/BoardWidth);
     
     if(x1 == x2){
         if(y1 > y2){
@@ -257,17 +265,17 @@ function checkOneVerticalLine(id1, id2, drawable) {
             y1 = t;
         }
         
-        for(var i = y1 + 1 ; i < y2 ; i ++){
+        for(let i = y1 + 1 ; i < y2 ; i ++){
             if(cells[x1 + i*BoardWidth].value != 0){
                 return false;
             }
         }
 
         if(drawable){
-            drawLineFromXtoY(cells[id1].centerX,cells[id1].centerY, cells[id2].centerX,cells[id2].centerY);
-        setTimeout(() => {
-            ctx.clearRect(0, 0, 630, 540);
-        }, 300);
+            drawLineFromXtoY(cells[id1].centerX,cells[id1].centerY, cells[id2].centerX,cells[id2].centerY, ctx);
+            setTimeout(() => {
+                ctx.clearRect(0, 0, 630, 540);
+            }, 300);
         }
         return true;
     }
@@ -279,10 +287,10 @@ function returnID(x,y) {
 }
 
 function checkX(id1, id2) {
-    var x1 = id1%BoardWidth;
-    var x2 = id2%BoardWidth;
-    var y1 = Math.floor(id1/BoardWidth);
-    var y2 = Math.floor(id2/BoardWidth);
+    let x1 = id1%BoardWidth;
+    let x2 = id2%BoardWidth;
+    let y1 = Math.floor(id1/BoardWidth);
+    let y2 = Math.floor(id2/BoardWidth);
     if(id1 == id2){
         return true;
     }
@@ -293,7 +301,7 @@ function checkX(id1, id2) {
    }
     if(y1 == y2){
         
-        for(var i = x1 + 1; i < x2; i++){
+        for(let i = x1 + 1; i < x2; i++){
             if(cells[i + y1*BoardWidth].value != 0){
                 return false;
             }
@@ -308,10 +316,10 @@ function checkX(id1, id2) {
 }
 
 function checkY(id1, id2) {
-    var x1 = id1%BoardWidth;
-    var x2 = id2%BoardWidth;
-    var y1 = Math.floor(id1/BoardWidth);
-    var y2 = Math.floor(id2/BoardWidth);
+    let x1 = id1%BoardWidth;
+    let x2 = id2%BoardWidth;
+    let y1 = Math.floor(id1/BoardWidth);
+    let y2 = Math.floor(id2/BoardWidth);
     if(id1 == id2){
         return true;
     }
@@ -322,7 +330,7 @@ function checkY(id1, id2) {
             y1 = t;
         }
        
-        for(var i = y1 + 1 ; i < y2 ; i ++){
+        for(let i = y1 + 1 ; i < y2 ; i ++){
            
             if(cells[returnID(x1,i)].value != 0){
                 return false;
@@ -339,14 +347,14 @@ function checkY(id1, id2) {
 
 
 function checkInRect(id1, id2, drawable) {
-    var x1 = id1%BoardWidth;
-    var x2 = id2%BoardWidth;
-    var y1 = Math.floor(id1/BoardWidth);
-    var y2 = Math.floor(id2/BoardWidth);
-    var leftX = x1;
-    var leftY = y1;
-    var rightX = x2;
-    var rightY = y2;
+    let x1 = id1%BoardWidth;
+    let x2 = id2%BoardWidth;
+    let y1 = Math.floor(id1/BoardWidth);
+    let y2 = Math.floor(id2/BoardWidth);
+    let leftX = x1;
+    let leftY = y1;
+    let rightX = x2;
+    let rightY = y2;
 
     if(x1 > x2){
         leftX = x2;
@@ -358,14 +366,14 @@ function checkInRect(id1, id2, drawable) {
     //left nằm dưới right
     if(leftY > rightY){
         //Kiểm tra | - |
-        for(var i = leftY -1 ; i >= rightY; i --){
+        for(let i = leftY -1 ; i >= rightY; i --){
             if(checkY(returnID(leftX, leftY), returnID(leftX, i))){
                 if(checkX(returnID(leftX,i), returnID(rightX, i))){
                     if(checkY(returnID(rightX,i), returnID(rightX, rightY))){
                         if(drawable){
-                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY);
-                            drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY);
-                            drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY);
+                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY, ctx);
                             setTimeout(() => {
                                 ctx.clearRect(0, 0, 630, 540);
                             }, 300);
@@ -376,14 +384,14 @@ function checkInRect(id1, id2, drawable) {
             }
         }
     }else{
-        for(var i = leftY + 1 ; i <= rightY; i ++){
+        for(let i = leftY + 1 ; i <= rightY; i ++){
             if(checkY(returnID(leftX, leftY), returnID(leftX, i))){
                 if(checkX(returnID(leftX,i), returnID(rightX, i))){
                     if(checkY(returnID(rightX,i), returnID(rightX, rightY))){
                         if(drawable){
-                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY);
-                            drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY);
-                            drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY);
+                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY, ctx);
                             setTimeout(() => {
                                 ctx.clearRect(0, 0, 630, 540);
                             }, 300);
@@ -395,17 +403,17 @@ function checkInRect(id1, id2, drawable) {
             }  
         }
     }
-    for(var i = leftX + 1; i <= rightX; i++){
+    for(let i = leftX + 1; i <= rightX; i++){
         if(checkX(returnID(leftX, leftY), returnID(i,leftY))){
             if(checkY(returnID(i,leftY), returnID(i, rightY))){
                 if(checkX(returnID(i,rightY), returnID(rightX, rightY))){
                     if(drawable){
-                        drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(i, leftY)].centerX, cells[returnID(i, leftY)].centerY);
-                    drawLineFromXtoY(cells[returnID(i, leftY)].centerX, cells[returnID(i, leftY)].centerY,cells[returnID(i, rightY)].centerX, cells[returnID(i, rightY)].centerY);
-                    drawLineFromXtoY(cells[returnID(i, rightY)].centerX, cells[returnID(i, rightY)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY);
-                    setTimeout(() => {
-                        ctx.clearRect(0, 0, 630, 540);
-                    }, 300);
+                        drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(i, leftY)].centerX, cells[returnID(i, leftY)].centerY, ctx);
+                        drawLineFromXtoY(cells[returnID(i, leftY)].centerX, cells[returnID(i, leftY)].centerY,cells[returnID(i, rightY)].centerX, cells[returnID(i, rightY)].centerY, ctx);
+                        drawLineFromXtoY(cells[returnID(i, rightY)].centerX, cells[returnID(i, rightY)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY, ctx);
+                        setTimeout(() => {
+                            ctx.clearRect(0, 0, 630, 540);
+                        }, 300);
                     }
                     return true;
                 }
@@ -417,17 +425,17 @@ function checkInRect(id1, id2, drawable) {
 }
 
 function checkOutRect(id1, id2, drawable) {
-    var x1 = id1%BoardWidth;
-    var x2 = id2%BoardWidth;
-    var y1 = Math.floor(id1/BoardWidth);
-    var y2 = Math.floor(id2/BoardWidth);
+    let x1 = id1%BoardWidth;
+    let x2 = id2%BoardWidth;
+    let y1 = Math.floor(id1/BoardWidth);
+    let y2 = Math.floor(id2/BoardWidth);
 
     //Nằm Ngang
     if(1){
-        var leftX = x1;
-        var leftY = y1;
-        var rightX = x2;
-        var rightY = y2;
+        let leftX = x1;
+        let leftY = y1;
+        let rightX = x2;
+        let rightY = y2;
     
         if(x1 > x2){
             leftX = x2;
@@ -436,18 +444,18 @@ function checkOutRect(id1, id2, drawable) {
             rightY = y1;
         }
 
-        var i = leftY - 1;
+        let i = leftY - 1;
         while(i >= 0 && cells[returnID(leftX, i)].value == 0){  
             if(checkY(returnID(leftX, leftY), returnID(leftX, i))){
                 if(checkX(returnID(leftX, i), returnID(rightX, i))){
                     if(checkY(returnID(rightX, i), returnID(rightX, rightY))){
                         if(drawable){
-                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY);
-                        drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY);
-                        drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY);
-                        setTimeout(() => {
-                            ctx.clearRect(0, 0, 630, 540);
-                        }, 300);
+                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY, ctx);
+                            setTimeout(() => {
+                                ctx.clearRect(0, 0, 630, 540);
+                            }, 300);
                         }
                         return true;
                     }
@@ -461,12 +469,12 @@ function checkOutRect(id1, id2, drawable) {
                 if(checkX(returnID(leftX,i), returnID(rightX, i))){
                     if(checkY(returnID(rightX, i), returnID(rightX, rightY))){
                         if(drawable){
-                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY);
-                        drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY);
-                        drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY);
-                        setTimeout(() => {
-                            ctx.clearRect(0, 0, 630, 540);
-                        }, 300);
+                            drawLineFromXtoY(cells[returnID(leftX, leftY)].centerX, cells[returnID(leftX, leftY)].centerY,cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(leftX, i)].centerX, cells[returnID(leftX, i)].centerY,cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(rightX, i)].centerX, cells[returnID(rightX, i)].centerY,cells[returnID(rightX, rightY)].centerX, cells[returnID(rightX, rightY)].centerY, ctx);
+                            setTimeout(() => {
+                                ctx.clearRect(0, 0, 630, 540);
+                            }, 300);
                         }
                         return true;
                     }
@@ -477,10 +485,10 @@ function checkOutRect(id1, id2, drawable) {
     }
     //Nằm dọc
     if(1){
-        var topX = x1;
-        var topY = y1;
-        var bottomX = x2;
-        var bottomY = y2;
+        let topX = x1;
+        let topY = y1;
+        let bottomX = x2;
+        let bottomY = y2;
 
         if(topY > bottomY){
             topY = y2;
@@ -490,18 +498,18 @@ function checkOutRect(id1, id2, drawable) {
         }
 
         //Xử lý <
-        var i = topX - 1;
+        let i = topX - 1;
         while(i>=0 && cells[returnID(i, topY)].value == 0){
             if(checkX(returnID(topX,topY), returnID(i,topY))){
                 if(checkY(returnID(i,topY), returnID(i, bottomY))){
                     if(checkX(returnID(i,bottomY), returnID(bottomX, bottomY))){
                         if(drawable){
                             drawLineFromXtoY(cells[returnID(topX, topY)].centerX, cells[returnID(topX, topY)].centerY,cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY);
-                        drawLineFromXtoY(cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY,cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY);
-                        drawLineFromXtoY(cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY,cells[returnID(bottomX, bottomY)].centerX, cells[returnID(bottomX, bottomY)].centerY);
-                        setTimeout(() => {
-                            ctx.clearRect(0, 0, 630, 540);
-                        }, 300);
+                            drawLineFromXtoY(cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY,cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY);
+                            drawLineFromXtoY(cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY,cells[returnID(bottomX, bottomY)].centerX, cells[returnID(bottomX, bottomY)].centerY);
+                            setTimeout(() => {
+                                ctx.clearRect(0, 0, 630, 540);
+                            }, 300);
                         }
                         return true;
                     }
@@ -516,12 +524,12 @@ function checkOutRect(id1, id2, drawable) {
                 if(checkY(returnID(i,topY), returnID(i, bottomY))){
                     if(checkX(returnID(i,bottomY), returnID(bottomX, bottomY))){
                         if(drawable){
-                            drawLineFromXtoY(cells[returnID(topX, topY)].centerX, cells[returnID(topX, topY)].centerY,cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY);
-                        drawLineFromXtoY(cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY,cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY);
-                        drawLineFromXtoY(cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY,cells[returnID(bottomX, bottomY)].centerX, cells[returnID(bottomX, bottomY)].centerY);
-                        setTimeout(() => {
-                            ctx.clearRect(0, 0, 630, 540);
-                        }, 300);
+                            drawLineFromXtoY(cells[returnID(topX, topY)].centerX, cells[returnID(topX, topY)].centerY,cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(i, topY)].centerX, cells[returnID(i, topY)].centerY,cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY, ctx);
+                            drawLineFromXtoY(cells[returnID(i, bottomY)].centerX, cells[returnID(i, bottomY)].centerY,cells[returnID(bottomX, bottomY)].centerX, cells[returnID(bottomX, bottomY)].centerY, ctx);
+                            setTimeout(() => {
+                                ctx.clearRect(0, 0, 630, 540);
+                            }, 300);
                         }
                         return true;
                     }
@@ -543,21 +551,21 @@ function checkOKIE(id1, id2, drawable) {
         return false;
 
     if(checkOneHorizontalLine(id1, id2,drawable)){
-        console.log("X");
+      
         return true;
     }
         
 
     if(checkOneVerticalLine(id1, id2,drawable)){
-        console.log("Y");
+       
         return true;
     }
     if(checkInRect(id1, id2,drawable)){
-        console.log("IN")
+      
         return true;
     }  
     if(checkOutRect(id1, id2,drawable)){
-        console.log("OUt");
+      
         return true;  
     }
           
@@ -574,10 +582,10 @@ function WinGame(){
 }
 
 function mainAlgorithim() {
-    var isHandle = [];
+    let isHandle = [];
     if(isSelecting == 2){
        
-        for(var id = BoardWidth; id < BoardWidth*BoardHeight - BoardWidth; id ++){
+        for(let id = BoardWidth; id < BoardWidth*BoardHeight - BoardWidth; id ++){
             if(cells[id].image.className.indexOf(" onSelect") !== -1){
                 isHandle.push(id);
             }
@@ -587,6 +595,7 @@ function mainAlgorithim() {
             cells[isHandle[1]].value = 0;
             gameScore += 100;
             myCanvas.style.zIndex = 20;
+          
             addEventForCell();  
         }
         
@@ -602,9 +611,9 @@ function isOkieToShuffle() {
     if(isWin){
         return false;
     }
-    for(var i = 0 ; i < cells.length - 1 ; i++){
+    for(let i = 0 ; i < cells.length - 1 ; i++){
         if(cells[i].value!= 0){
-            for(var j = i + 1 ; j < cells.length; j ++){
+            for(let j = i + 1 ; j < cells.length; j ++){
                 if(cells[j].value != 0){
                     if(checkOKIE(i,j, false))
                         return false;
@@ -616,7 +625,7 @@ function isOkieToShuffle() {
 }
 
 function handleSwap() {
-    var reload = document.getElementById('reload');
+    let reload = document.getElementById('reload');
     reload.style.display = "block";
     swapCell();
     setTimeout(() => {
